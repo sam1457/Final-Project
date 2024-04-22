@@ -12,11 +12,14 @@ clock = pygame.time.Clock()
 test_font = pygame.font.Font(None, 50)
 
 sky_surface = pygame.image.load('graphics/Water.JPG')
+
 ground_surface = pygame.image.load('graphics/Ground.png')
 
 # preacher_Runner = pygame.image.load('graphics/Preacher.jpg')  Create or find a clip art for the main character
 
 text_surface = test_font.render('My Game', False, 'Black')
+snail_surface = pygame.image.load('graphics/Aligator.gif')
+snail_x_pos = 600
 
 while True:
     for event in pygame.event.get():
@@ -26,6 +29,11 @@ while True:
     screen.blit(sky_surface, (0, 0))
     screen.blit(ground_surface, (0, 0))
     screen.blit(text_surface, (300, 50))
+    snail_x_pos -= 3
+    if snail_x_pos < -100: snail_x_pos = 800
+    screen.blit(snail_surface,(snail_x_pos, 250))
+
+
 
     # screen.blit(preacher_Runner, (0, 100))
     pygame.display.update()
