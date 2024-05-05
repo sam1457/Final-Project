@@ -10,9 +10,12 @@ def display_score():
 def obstacle_movement(obstacle_list):
     if obstacle_list:
         for obstacle_rect in obstacle_list:
-            obstacle_rect.x -= 10
+            obstacle_rect.x -= 5
 
-            screen.blit(Enemy_surf,obstacle_rect)
+            if obstacle_rect.bottom == 300: screen.blit(Enemy_surf,obstacle_rect)
+            else: screen.blit(bird_surf,obstacle_rect)
+
+        obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.x > -100]
 
         return obstacle_list
     else: return []
@@ -36,10 +39,12 @@ sky_surface = pygame.image.load('graphics/Water.JPG')
 sky_surface = pygame.transform.scale(sky_surface, (800, 400))
 ground_surface = pygame.image.load('graphics/Ground.png')
 
-Enemy_surf = pygame.image.load('graphics/Aligator.gif').convert()
-Enemy_rect = Enemy_surf.get_rect(bottomright=(900, 400))
+Enemy_surf = pygame.image.load('graphics/Aligator.gif')
+
+bird_surf = pygame.image.load('graphics/bird.png')
 
 obstacle_rect_list = []
+
 Stick_Runner = pygame.image.load('graphics/Run.png').convert_alpha()
 player_rect = Stick_Runner.get_rect(midbottom=(80, 380))
 player_gravity = 0
@@ -57,7 +62,7 @@ person_Runner = pygame.image.load('graphics/Run.png').convert_alpha()
 person_rect = Stick_Runner.get_rect(midbottom=(400, 300))
 
 obstacle_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(obstacle_timer,900)
+pygame.time.set_timer(obstacle_timer,1300)
 
 while True:
     for event in pygame.event.get():
@@ -75,22 +80,21 @@ while True:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
-                Enemy_rect.left = 800
                 start_time = int(pygame.time.get_ticks() / 1000)
 
         if event.type == obstacle_timer and game_active:
-            obstacle_rect_list.append(Enemy_surf.get_rect(bottomright=(randint(900,1900), 400)))
+            if randint(0,2):
+                obstacle_rect_list.append(Enemy_surf.get_rect(bottomright=(randint(900,1100), 100)))
+            else:
+                obstacle_rect_list.append(bird_surf.get_rect(bottomright=(randint(900, 1000), 300)))
+
 
     if game_active:
         screen.blit(sky_surface, (0, 0))
         screen.blit(ground_surface, (0, 0))
         display_score()
 
-        #Enemy_rect.x -= 4
-        #if Enemy_rect.right <= 0: Enemy_rect.left = 800
-        #screen.blit(Enemy_surf, Enemy_rect)
-
-        player_gravity += 1
+        player_gravity += 2
         player_rect.y += player_gravity
         if player_rect.bottom >= 380: player_rect.bottom = 380
         screen.blit(Stick_Runner, player_rect)
